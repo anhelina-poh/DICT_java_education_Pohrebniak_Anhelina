@@ -2,7 +2,9 @@ package ChatBot;
 
 import java.util.Scanner;
 
-public class ChatBot {public static void main(String[] args) {
+public class ChatBot {
+    @SuppressWarnings({"all", "UseOfSystemOutOrSystemErr"})
+    public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
 
     String botName = "Bob";
@@ -32,6 +34,29 @@ public class ChatBot {public static void main(String[] args) {
         System.out.println(i + " !");
     }
 
-    scanner.close();
+        System.out.println("Why are methods used in Java?");
+        System.out.println("1. To make code longer and more complicated.");
+        System.out.println("2. To repeat the same code multiple times.");
+        System.out.println("3. To organize code into reusable blocks.");
+        System.out.println("4. Because it's required by the compiler.");
+
+        int answer;
+        boolean correctAnswer = false;
+
+        while (!correctAnswer) {
+            answer = scanner.nextInt();
+            scanner.nextLine();
+
+            if (answer == 3) {
+                correctAnswer = true;
+                System.out.println("Correct");
+            } else {
+                System.out.println("Wrong");
+            }
+        }
+
+        System.out.println("Goodbye, have a nice day!");
+
+        scanner.close();
     }
 }
