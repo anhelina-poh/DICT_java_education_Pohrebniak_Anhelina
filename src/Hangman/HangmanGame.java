@@ -10,12 +10,14 @@ public class HangmanGame {
     private static final String[] WORDS = {"python", "java", "javascript", "kotlin"};
     private final String secretWord;
     private final Set<Character> guessedLetters;
+    private final Set<Character> allEnteredLetters;
     private int lives;
 
     public HangmanGame() {
         Random random = new Random();
         this.secretWord = WORDS[random.nextInt(WORDS.length)];
         this.guessedLetters = new HashSet<>();
+        this.allEnteredLetters = new HashSet<>();
         this.lives = 8;
     }
 
@@ -24,15 +26,28 @@ public class HangmanGame {
             displayWord();
             System.out.print("Input a letter: > ");
             String input = scanner.nextLine().trim();
+
+            if (input.length() != 1) {
+                System.out.println("You should input a single letter");
+                continue;
+            }
+
             char letter = input.charAt(0);
 
+            if (letter < 'a' || letter > 'z') {
+                System.out.println("Please enter a lowercase English letter");
+                continue;
+            }
+
+            if (allEnteredLetters.contains(letter)) {
+                System.out.println("You've already guessed this letter");
+                continue;
+            }
+
+            allEnteredLetters.add(letter);
+
             if (secretWord.indexOf(letter) >= 0) {
-                if (guessedLetters.contains(letter)) {
-                    System.out.println("No improvements");
-                    lives--;
-                } else {
-                    guessedLetters.add(letter);
-                }
+                guessedLetters.add(letter);
             } else {
                 System.out.println("That letter doesn't appear in the word");
                 lives--;
@@ -40,8 +55,7 @@ public class HangmanGame {
         }
 
         if (isWordGuessed()) {
-            displayWord();
-            System.out.println("You guessed the word!");
+            System.out.println("You guessed the word " + secretWord + "!");
             System.out.println("You survived!");
         } else {
             System.out.println("You lost!");
