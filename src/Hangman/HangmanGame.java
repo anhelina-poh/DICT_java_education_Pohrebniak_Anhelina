@@ -10,33 +10,42 @@ public class HangmanGame {
     private static final String[] WORDS = {"python", "java", "javascript", "kotlin"};
     private final String secretWord;
     private final Set<Character> guessedLetters;
+    private int lives;
 
     public HangmanGame() {
         Random random = new Random();
         this.secretWord = WORDS[random.nextInt(WORDS.length)];
         this.guessedLetters = new HashSet<>();
+        this.lives = 8;
     }
 
     public void play(Scanner scanner) {
-        int attempts = 8;
-
-        while (attempts > 0) {
+        while (lives > 0 && !isWordGuessed()) {
             displayWord();
             System.out.print("Input a letter: > ");
             String input = scanner.nextLine().trim();
             char letter = input.charAt(0);
 
             if (secretWord.indexOf(letter) >= 0) {
-                guessedLetters.add(letter);
+                if (guessedLetters.contains(letter)) {
+                    System.out.println("No improvements");
+                    lives--;
+                } else {
+                    guessedLetters.add(letter);
+                }
             } else {
                 System.out.println("That letter doesn't appear in the word");
+                lives--;
             }
-
-            attempts--;
         }
 
-        System.out.println("Thanks for playing!");
-        System.out.println("We'll see how well you did in the next stage");
+        if (isWordGuessed()) {
+            displayWord();
+            System.out.println("You guessed the word!");
+            System.out.println("You survived!");
+        } else {
+            System.out.println("You lost!");
+        }
     }
 
     private void displayWord() {
@@ -48,5 +57,14 @@ public class HangmanGame {
             }
         }
         System.out.println();
+    }
+
+    private boolean isWordGuessed() {
+        for (char c : secretWord.toCharArray()) {
+            if (!guessedLetters.contains(c)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
