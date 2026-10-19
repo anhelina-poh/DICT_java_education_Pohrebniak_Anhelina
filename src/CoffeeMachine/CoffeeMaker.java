@@ -8,7 +8,7 @@ public class CoffeeMaker {
     private int cups = 9;
     private int money = 550;
 
-    public void printStatus() {
+    public void printRemaining() {
         System.out.println("The coffee machine has:");
         System.out.println(water + " of water");
         System.out.println(milk + " of milk");
@@ -17,28 +17,43 @@ public class CoffeeMaker {
         System.out.println(money + " of money");
     }
 
-    public void buyCoffee(int type) {
+    private boolean checkResources(int reqWater, int reqMilk, int reqBeans) {
+        if (water < reqWater) {
+            System.out.println("Sorry, not enough water!");
+            return false;
+        }
+        if (milk < reqMilk) {
+            System.out.println("Sorry, not enough milk!");
+            return false;
+        }
+        if (beans < reqBeans) {
+            System.out.println("Sorry, not enough coffee beans!");
+            return false;
+        }
+        if (cups < 1) {
+            System.out.println("Sorry, not enough disposable cups!");
+            return false;
+        }
+        return true;
+    }
+
+    public void buyCoffee(String type) {
         switch (type) {
-            case 1 -> { // espresso
-                water -= 250;
-                beans -= 16;
-                cups -= 1;
-                money += 4;
-            }
-            case 2 -> { // latte
-                water -= 350;
-                milk -= 75;
-                beans -= 20;
-                cups -= 1;
-                money += 7;
-            }
-            case 3 -> { // cappuccino
-                water -= 200;
-                milk -= 100;
-                beans -= 12;
-                cups -= 1;
-                money += 6;
-            }
+            case "1" -> make(250, 0, 16, 4);
+            case "2" -> make(350, 75, 20, 7);
+            case "3" -> make(200, 100, 12, 6);
+            case "back" -> {}
+        }
+    }
+
+    private void make(int reqWater, int reqMilk, int reqBeans, int price) {
+        if (checkResources(reqWater, reqMilk, reqBeans)) {
+            System.out.println("I have enough resources, making you a coffee!");
+            water -= reqWater;
+            milk -= reqMilk;
+            beans -= reqBeans;
+            cups -= 1;
+            money += price;
         }
     }
 
