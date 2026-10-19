@@ -2,14 +2,16 @@ package CoffeeMachine;
 
 @SuppressWarnings("all")
 public class CoffeeMaker {
-    public void calculateIngredients(int cups) {
-        int water = cups * 200;
-        int milk = cups * 50;
-        int beans = cups * 15;
+    public void checkCapability(int water, int milk, int beans, int neededCups) {
+        int possibleCups = Math.min(water / 200, Math.min(milk / 50, beans / 15));
 
-        System.out.println("For " + cups + " cups of coffee you will need:");
-        System.out.println(water + " ml of water");
-        System.out.println(milk + " ml of milk");
-        System.out.println(beans + " g of coffee beans");
+        if (possibleCups == neededCups) {
+            System.out.println("Yes, I can make that amount of coffee");
+        } else if (possibleCups > neededCups) {
+            int extra = possibleCups - neededCups;
+            System.out.println("Yes, I can make that amount of coffee (and even " + extra + " more than that)");
+        } else {
+            System.out.println("No, I can make only " + possibleCups + " cups of coffee");
+        }
     }
 }
