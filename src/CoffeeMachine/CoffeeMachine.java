@@ -8,24 +8,37 @@ public class CoffeeMachine {
         Scanner scanner = new Scanner(System.in);
         CoffeeMaker maker = new CoffeeMaker();
 
-        System.out.println("Write how many ml of water the coffee machine has:");
+        maker.printStatus();
+        System.out.println("Write action (buy, fill, take):");
         System.out.print("> ");
-        int water = scanner.nextInt();
+        String action = scanner.next();
 
-        System.out.println("Write how many ml of milk the coffee machine has:");
-        System.out.print("> ");
-        int milk = scanner.nextInt();
+        switch (action) {
+            case "buy" -> {
+                System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino:");
+                System.out.print("> ");
+                int type = scanner.nextInt();
+                maker.buyCoffee(type);
+            }
+            case "fill" -> {
+                System.out.println("Write how many ml of water you want to add:");
+                System.out.print("> ");
+                int w = scanner.nextInt();
+                System.out.println("Write how many ml of milk you want to add:");
+                System.out.print("> ");
+                int m = scanner.nextInt();
+                System.out.println("Write how many grams of coffee beans you want to add:");
+                System.out.print("> ");
+                int b = scanner.nextInt();
+                System.out.println("Write how many disposable coffee cups you want to add:");
+                System.out.print("> ");
+                int c = scanner.nextInt();
+                maker.addSupplies(w, m, b, c);
+            }
+            case "take" -> maker.takeMoney();
+        }
 
-        System.out.println("Write how many grams of coffee beans the coffee machine has:");
-        System.out.print("> ");
-        int beans = scanner.nextInt();
-
-        System.out.println("Write how many cups of coffee you will need:");
-        System.out.print("> ");
-        int neededCups = scanner.nextInt();
-
-        maker.checkCapability(water, milk, beans, neededCups);
-
+        maker.printStatus();
         scanner.close();
     }
 }
