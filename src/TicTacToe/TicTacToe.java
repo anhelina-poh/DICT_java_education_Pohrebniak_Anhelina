@@ -1,10 +1,18 @@
 package TicTacToe;
 
+import java.util.Scanner;
+
 @SuppressWarnings("all")
 public class TicTacToe {
     static void main() {
-        System.out.println("X O X");
-        System.out.println("O X O");
-        System.out.println("X X O");
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter cells: ");
+        String input = scanner.nextLine();
+
+        GameBoard board = new GameBoard();
+        board.setupFromString(input);
+        board.printBoard();
+
+        scanner.close();
     }
 }
