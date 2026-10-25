@@ -12,8 +12,12 @@ public class TicTacToe {
         GameBoard board = new GameBoard();
         board.setupFromString(input);
         board.printBoard();
-        System.out.println(board.analyzeState());
 
+
+        Player player = new HumanPlayer('X');
+        player.makeMove(board, scanner);
+
+        board.printBoard();
         scanner.close();
     }
 }
