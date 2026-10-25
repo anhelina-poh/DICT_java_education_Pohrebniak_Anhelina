@@ -14,6 +14,6 @@ public abstract class Player {
         return symbol;
     }
 
-
-    public abstract void makeMove(GameBoard board, Scanner scanner);
+    // Возвращает true при обычном ходе, false — если игрок ввёл exit
+    public abstract boolean makeMove(GameBoard board, Scanner scanner);
 }

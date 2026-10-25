@@ -6,18 +6,34 @@ import java.util.Scanner;
 public class TicTacToe {
     static void main() {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter cells: ");
-        String input = scanner.nextLine();
-
         GameBoard board = new GameBoard();
-        board.setupFromString(input);
-        board.printBoard();
 
-
-        Player player = new HumanPlayer('X');
-        player.makeMove(board, scanner);
+        Player[] players = new Player[]{ new HumanPlayer('X'), new HumanPlayer('O') };
+        int turn = 0;
 
         board.printBoard();
+
+        while (true) {
+            Player currentPlayer = players[turn % 2];
+
+            // Если игрок ввёл exit — завершаем игру
+            boolean madeMove = currentPlayer.makeMove(board, scanner);
+            if (!madeMove) {
+                System.out.println("Game finished by user.");
+                break;
+            }
+
+            board.printBoard();
+
+            String state = board.analyzeState();
+            if (!state.equals("Game not finished")) {
+                System.out.println(state);
+                break;
+            }
+
+            turn++;
+        }
+
         scanner.close();
     }
 }

@@ -10,10 +10,16 @@ public class HumanPlayer extends Player {
     }
 
     @Override
-    public void makeMove(GameBoard board, Scanner scanner) {
+    public boolean makeMove(GameBoard board, Scanner scanner) {
         while (true) {
             System.out.print("Enter the coordinates: ");
             String line = scanner.nextLine().trim();
+
+            // Проверка на выход из игры
+            if ("exit".equalsIgnoreCase(line)) {
+                return false;
+            }
+
             String[] parts = line.split("\\s+");
 
             if (parts.length != 2) {
@@ -41,7 +47,7 @@ public class HumanPlayer extends Player {
             }
 
             board.setCell(row - 1, col - 1, symbol);
-            break;
+            return true;
         }
     }
 }
