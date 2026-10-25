@@ -12,6 +12,7 @@ public class TicTacToe {
         GameBoard board = new GameBoard();
         board.setupFromString(input);
         board.printBoard();
+        System.out.println(board.analyzeState());
 
         scanner.close();
     }
