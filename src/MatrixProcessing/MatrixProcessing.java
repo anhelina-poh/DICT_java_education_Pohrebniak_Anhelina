@@ -13,9 +13,15 @@ public class MatrixProcessing {
             System.out.println("3. Multiply matrices");
             System.out.println("4. Transpose matrix");
             System.out.println("5. Calculate a determinant");
+            System.out.println("6. Inverse matrix");
             System.out.println("0. Exit");
             System.out.print("Your choice: > ");
-            int choice = scanner.nextInt();
+
+            if (!scanner.hasNext()) {
+                break;
+            }
+
+            int choice = Integer.parseInt(scanner.next());
 
             if (choice == 0) {
                 break;
@@ -39,7 +45,8 @@ public class MatrixProcessing {
                     System.out.print("Enter size of matrix: > ");
                     Matrix m = Matrix.read(scanner);
                     System.out.print("Enter constant: > ");
-                    double c = scanner.nextDouble();
+                    String constToken = scanner.next().replace(',', '.');
+                    double c = Double.parseDouble(constToken);
                     System.out.println("The result is:");
                     m.multiply(c).print();
                 }
@@ -62,7 +69,7 @@ public class MatrixProcessing {
                     System.out.println("3. Vertical line");
                     System.out.println("4. Horizontal line");
                     System.out.print("Your choice: > ");
-                    int tChoice = scanner.nextInt();
+                    int tChoice = Integer.parseInt(scanner.next());
 
                     System.out.print("Enter matrix size: > ");
                     Matrix m = Matrix.read(scanner);
@@ -92,6 +99,17 @@ public class MatrixProcessing {
                         } else {
                             System.out.println(det);
                         }
+                    }
+                }
+                case 6 -> {
+                    System.out.print("Enter matrix size: > ");
+                    Matrix m = Matrix.read(scanner);
+                    Matrix inv = m.inverse();
+                    if (inv == null) {
+                        System.out.println("This matrix doesn't have an inverse.");
+                    } else {
+                        System.out.println("The result is:");
+                        inv.print();
                     }
                 }
             }

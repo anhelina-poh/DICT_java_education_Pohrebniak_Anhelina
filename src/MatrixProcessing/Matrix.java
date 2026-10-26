@@ -31,12 +31,13 @@ public class Matrix {
     }
 
     public static Matrix read(Scanner scanner) {
-        int r = scanner.nextInt();
-        int c = scanner.nextInt();
+        int r = Integer.parseInt(scanner.next());
+        int c = Integer.parseInt(scanner.next());
         Matrix matrix = new Matrix(r, c);
         for (int i = 0; i < r; i++) {
             for (int j = 0; j < c; j++) {
-                matrix.set(i, j, scanner.nextDouble());
+                String token = scanner.next().replace(',', '.');
+                matrix.set(i, j, Double.parseDouble(token));
             }
         }
         return matrix;
@@ -49,7 +50,8 @@ public class Matrix {
                 if (Math.abs(val - Math.round(val)) < 1e-9) {
                     System.out.print((long) Math.round(val));
                 } else {
-                    System.out.print(val);
+                    double rounded = Math.round(val * 100.0) / 100.0;
+                    System.out.print(rounded);
                 }
                 if (j < cols - 1) {
                     System.out.print(" ");
@@ -179,5 +181,25 @@ public class Matrix {
             r++;
         }
         return minor;
+    }
+
+    public Matrix inverse() {
+        if (!isSquare()) return null;
+        double det = determinant();
+        if (Math.abs(det) < 1e-9) return null;
+
+        int n = rows;
+        Matrix cofactors = new Matrix(n, n);
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                double[][] minor = getMinor(this.values, i, j);
+                double cofactor = computeDet(minor);
+                double sign = ((i + j) % 2 == 0) ? 1.0 : -1.0;
+                cofactors.set(i, j, sign * cofactor);
+            }
+        }
+
+        Matrix adjugate = cofactors.transposeMainDiagonal();
+        return adjugate.multiply(1.0 / det);
     }
 }
