@@ -81,4 +81,21 @@ public class Matrix {
         }
         return res;
     }
+
+    public Matrix multiply(Matrix other) {
+        if (this.cols != other.rows) {
+            return null;
+        }
+        Matrix res = new Matrix(this.rows, other.cols);
+        for (int i = 0; i < this.rows; i++) {
+            for (int j = 0; j < other.cols; j++) {
+                double sum = 0;
+                for (int k = 0; k < this.cols; k++) {
+                    sum += this.get(i, k) * other.get(k, j);
+                }
+                res.set(i, j, sum);
+            }
+        }
+        return res;
+    }
 }
