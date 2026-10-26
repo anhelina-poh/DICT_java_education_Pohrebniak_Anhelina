@@ -6,15 +6,12 @@ import java.util.Scanner;
 public class MatrixProcessing {
     static void main() {
         Scanner scanner = new Scanner(System.in);
-        Matrix a = Matrix.read(scanner);
-        Matrix b = Matrix.read(scanner);
+        Matrix matrix = Matrix.read(scanner);
+        double constant = scanner.nextDouble();
 
-        Matrix result = a.add(b);
-        if (result == null) {
-            System.out.println("ERROR");
-        } else {
-            result.print();
-        }
+        Matrix result = matrix.multiply(constant);
+        result.print();
+
         scanner.close();
     }
 }

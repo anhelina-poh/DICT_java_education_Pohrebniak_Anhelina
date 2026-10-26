@@ -51,7 +51,9 @@ public class Matrix {
                 } else {
                     System.out.print(val);
                 }
-                if (j < cols - 1) System.out.print(" ");
+                if (j < cols - 1) {
+                    System.out.print(" ");
+                }
             }
             System.out.println();
         }
@@ -65,6 +67,16 @@ public class Matrix {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 res.set(i, j, this.get(i, j) + other.get(i, j));
+            }
+        }
+        return res;
+    }
+
+    public Matrix multiply(double constant) {
+        Matrix res = new Matrix(rows, cols);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                res.set(i, j, this.get(i, j) * constant);
             }
         }
         return res;
