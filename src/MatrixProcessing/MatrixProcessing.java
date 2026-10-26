@@ -12,6 +12,7 @@ public class MatrixProcessing {
             System.out.println("2. Multiply matrix by a constant");
             System.out.println("3. Multiply matrices");
             System.out.println("4. Transpose matrix");
+            System.out.println("5. Calculate a determinant");
             System.out.println("0. Exit");
             System.out.print("Your choice: > ");
             int choice = scanner.nextInt();
@@ -76,6 +77,21 @@ public class MatrixProcessing {
                     if (res != null) {
                         System.out.println("The result is:");
                         res.print();
+                    }
+                }
+                case 5 -> {
+                    System.out.print("Enter matrix size: > ");
+                    Matrix m = Matrix.read(scanner);
+                    if (!m.isSquare()) {
+                        System.out.println("The operation cannot be performed.");
+                    } else {
+                        double det = m.determinant();
+                        System.out.println("The result is:");
+                        if (Math.abs(det - Math.round(det)) < 1e-9) {
+                            System.out.println((long) Math.round(det));
+                        } else {
+                            System.out.println(det);
+                        }
                     }
                 }
             }

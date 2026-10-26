@@ -138,4 +138,46 @@ public class Matrix {
         }
         return res;
     }
+
+    public boolean isSquare() {
+        return rows == cols;
+    }
+
+    public double determinant() {
+        if (!isSquare()) {
+            throw new IllegalArgumentException("Matrix must be square");
+        }
+        return computeDet(this.values);
+    }
+
+    private static double computeDet(double[][] mat) {
+        int n = mat.length;
+        if (n == 1) return mat[0][0];
+        if (n == 2) return mat[0][0] * mat[1][1] - mat[0][1] * mat[1][0];
+
+        double det = 0;
+        for (int j = 0; j < n; j++) {
+            double[][] minor = getMinor(mat, 0, j);
+            double sign = (j % 2 == 0) ? 1.0 : -1.0;
+            det += sign * mat[0][j] * computeDet(minor);
+        }
+        return det;
+    }
+
+    public static double[][] getMinor(double[][] mat, int skipRow, int skipCol) {
+        int n = mat.length;
+        double[][] minor = new double[n - 1][n - 1];
+        int r = 0;
+        for (int i = 0; i < n; i++) {
+            if (i == skipRow) continue;
+            int c = 0;
+            for (int j = 0; j < n; j++) {
+                if (j == skipCol) continue;
+                minor[r][c] = mat[i][j];
+                c++;
+            }
+            r++;
+        }
+        return minor;
+    }
 }
