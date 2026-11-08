@@ -1,65 +1,103 @@
 package CreditCalculator;
 
-import java.util.Scanner;
-
 @SuppressWarnings("all")
 public class CalculatorLogic {
-    public void calculateAnnuityInteractive(Scanner scanner) {
-        System.out.println("What do you want to calculate?");
-        System.out.println("type \"n\" for number of monthly payments,");
-        System.out.println("type \"a\" for annuity monthly payment amount,");
-        System.out.println("type \"p\" for loan principal:");
-        System.out.print("> ");
-        String choice = scanner.next();
 
-        switch (choice) {
-            case "n" -> {
-                System.out.println("Enter the loan principal:");
-                System.out.print("> ");
-                double principal = scanner.nextDouble();
-                System.out.println("Enter the monthly payment:");
-                System.out.print("> ");
-                double payment = scanner.nextDouble();
-                System.out.println("Enter the loan interest:");
-                System.out.print("> ");
-                double interest = scanner.nextDouble();
+    public void dataAnalyze(String type, String principalStr, String periodsStr,
+                            String interestStr, String paymentStr) {
+        if (!validateParameters(type, principalStr, periodsStr, interestStr, paymentStr)) {
+            System.out.println("Incorrect parameters");
+            return;
+        }
 
-                double i = interest / (12 * 100);
-                double n = Math.log(payment / (payment - i * principal)) / Math.log(1 + i);
-                int totalMonths = (int) Math.ceil(n);
-                displayPeriod(totalMonths);
+        try {
+            double principal = principalStr != null ? Double.parseDouble(principalStr.replace(',', '.')) : 0;
+            int periods = periodsStr != null ? Integer.parseInt(periodsStr) : 0;
+            double annualInterest = interestStr != null ? Double.parseDouble(interestStr.replace(',', '.')) : 0;
+            double payment = paymentStr != null ? Double.parseDouble(paymentStr.replace(',', '.')) : 0;
+
+            if (principal < 0 || periods < 0 || annualInterest < 0 || payment < 0) {
+                System.out.println("Incorrect parameters");
+                return;
             }
-            case "a" -> {
-                System.out.println("Enter the loan principal:");
-                System.out.print("> ");
-                double principal = scanner.nextDouble();
-                System.out.println("Enter the number of periods:");
-                System.out.print("> ");
-                int periods = scanner.nextInt();
-                System.out.println("Enter the loan interest:");
-                System.out.print("> ");
-                double interest = scanner.nextDouble();
 
-                double i = interest / (12 * 100);
-                double a = principal * (i * Math.pow(1 + i, periods)) / (Math.pow(1 + i, periods) - 1);
-                int payment = (int) Math.ceil(a);
-                System.out.println("Your monthly payment = " + payment + "!");
-            }
-            case "p" -> {
-                System.out.println("Enter the annuity payment:");
-                System.out.print("> ");
-                double payment = scanner.nextDouble();
-                System.out.println("Enter the number of periods:");
-                System.out.print("> ");
-                int periods = scanner.nextInt();
-                System.out.println("Enter the loan interest:");
-                System.out.print("> ");
-                double interest = scanner.nextDouble();
+            double monthInterest = annualInterest / (12 * 100);
 
-                double i = interest / (12 * 100);
-                double p = payment / ((i * Math.pow(1 + i, periods)) / (Math.pow(1 + i, periods) - 1));
-                System.out.println("Your loan principal = " + Math.round(p) + "!");
+            switch (type) {
+                case "diff" -> calculateDiff(principal, periods, monthInterest);
+                case "annuity" -> calculateAnnuity(principal, periods, monthInterest, payment);
+                default -> System.out.println("Incorrect parameters");
             }
+        } catch (NumberFormatException e) {
+            System.out.println("Incorrect parameters");
+        }
+    }
+
+    private boolean validateParameters(String type, String principalStr, String periodsStr,
+                                       String interestStr, String paymentStr) {
+        if (type == null || (!type.equals("diff") && !type.equals("annuity"))) {
+            return false;
+        }
+        if (interestStr == null) {
+            return false;
+        }
+
+        if ("diff".equals(type)) {
+            if (paymentStr != null) {
+                return false;
+            }
+            return principalStr != null && periodsStr != null;
+        }
+
+        if ("annuity".equals(type)) {
+            int provided = 0;
+            if (principalStr != null) provided++;
+            if (periodsStr != null) provided++;
+            if (paymentStr != null) provided++;
+            return provided == 2;
+        }
+
+        return false;
+    }
+
+    private void calculateDiff(double principal, int periods, double monthlyInterest) {
+        double totalPaid = 0;
+        double basePay = principal / periods;
+
+        for (int month = 1; month <= periods; month++) {
+            double diffPay = basePay + monthlyInterest * (principal - basePay * (month - 1));
+            diffPay = Math.ceil(diffPay);
+            totalPaid += diffPay;
+            System.out.println("Month " + month + ": payment is " + (long) diffPay);
+        }
+
+        long overpay = Math.round(totalPaid - principal);
+        System.out.println("Overpayment = " + overpay);
+    }
+
+    private void calculateAnnuity(double principal, int periods, double monthlyInterest, double payment) {
+        if (principal == 0) {
+            double factor = (monthlyInterest * Math.pow(1 + monthlyInterest, periods)) /
+                    (Math.pow(1 + monthlyInterest, periods) - 1);
+            double loanPrincipal = payment / factor;
+            long roundedPrincipal = Math.round(loanPrincipal);
+            System.out.println("Your loan principal = " + roundedPrincipal + "!");
+            long overpayment = Math.round(payment * periods - loanPrincipal);
+            System.out.println("Overpayment = " + overpayment);
+        } else if (periods == 0) {
+            double n = Math.log(payment / (payment - monthlyInterest * principal)) /
+                    Math.log(1 + monthlyInterest);
+            int months = (int) Math.ceil(n);
+            displayPeriod(months);
+            long overpayment = Math.round(payment * months - principal);
+            System.out.println("Overpayment = " + overpayment);
+        } else if (payment == 0) {
+            double factor = (monthlyInterest * Math.pow(1 + monthlyInterest, periods)) /
+                    (Math.pow(1 + monthlyInterest, periods) - 1);
+            long annuityPay = (long) Math.ceil(principal * factor);
+            System.out.println("Your annuity payment = " + annuityPay + "!");
+            long overpayment = annuityPay * periods - (long) principal;
+            System.out.println("Overpayment = " + overpayment);
         }
     }
 
